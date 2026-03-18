@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { useEffect, useState } from "react";
 import { PlayButton } from "@/components/play-button";
 import { VolumeDisplay } from "@/components/volume-display";
 import { ReverseMode } from "@/components/modes/reverse-mode";
@@ -11,15 +10,16 @@ import { useVolumeStore } from "@/stores/use-volume-store";
 import { useAudio } from "@/hooks/use-audio";
 import type { VolumeMode } from "@/stores/use-volume-store";
 
-const modeMap: Record<number, VolumeMode> = {
-  0: "reverse",
-  1: "roulette",
-  2: "runaway",
-};
+const tabs = [
+  { id: 0, label: "볼륨 조절", mode: "reverse" as VolumeMode },
+  { id: 1, label: "볼륨 조절", mode: "roulette" as VolumeMode },
+  { id: 2, label: "볼륨 조절", mode: "runaway" as VolumeMode },
+];
 
 export default function Home() {
   const { actualVolume, sliderValue, isPlaying, setIsPlaying, setMode } = useVolumeStore();
   const { start, stop, setVolume } = useAudio();
+  const [activeTab, setActiveTab] = useState(0);
 
   useEffect(() => {
     setVolume(actualVolume);
@@ -35,51 +35,58 @@ export default function Home() {
     }
   };
 
-  const handleTabChange = (value: number | string | null) => {
-    if (value !== null && typeof value === "number") {
-      setMode(modeMap[value]);
-    }
+  const handleTabClick = (id: number) => {
+    setActiveTab(id);
+    setMode(tabs[id].mode);
   };
 
   return (
-    <div className="container mx-auto px-4 py-6 max-w-2xl">
-      {/* YouTube Player */}
-      <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-black mb-6">
-        <div id="yt-player" className="absolute inset-0 w-full h-full" />
+    <div className="container mx-auto max-w-2xl">
+      {/* Bookmark Tabs */}
+      <div className="flex items-end px-4 pt-4 gap-1">
+        {tabs.map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => handleTabClick(tab.id)}
+            className={`
+              relative px-5 py-2 text-sm font-medium rounded-t-lg border border-b-0 transition-colors
+              ${activeTab === tab.id
+                ? "bg-background text-foreground border-border z-10"
+                : "bg-muted/50 text-muted-foreground border-transparent hover:bg-muted hover:text-foreground"
+              }
+            `}
+          >
+            <span className="inline-flex items-center gap-1.5">
+              <span className={`
+                inline-flex size-5 items-center justify-center rounded-full text-xs font-bold
+                ${activeTab === tab.id ? "bg-primary text-primary-foreground" : "bg-muted-foreground/20 text-muted-foreground"}
+              `}>
+                {tab.id + 1}
+              </span>
+              {tab.label}
+            </span>
+          </button>
+        ))}
       </div>
 
-      {/* Controls */}
-      <div className="flex items-center justify-between mb-6">
-        <PlayButton isPlaying={isPlaying} onToggle={handleTogglePlay} />
-        <VolumeDisplay sliderValue={sliderValue} actualVolume={actualVolume} />
-      </div>
+      {/* Content Area */}
+      <div className="border border-border rounded-b-xl rounded-tr-xl bg-background px-4 pb-6">
+        {/* YouTube Player */}
+        <div className="relative w-full aspect-video rounded-lg overflow-hidden bg-black mt-4 mb-4">
+          <div id="yt-player" className="absolute inset-0 w-full h-full" />
+        </div>
 
-      {/* Mode Tabs */}
-      <Tabs defaultValue={0} onValueChange={handleTabChange} className="w-full">
-        <TabsList className="w-full mb-4">
-          <TabsTrigger value={0} className="flex-1 flex items-center justify-center gap-1.5">
-            <span className="inline-flex size-5 items-center justify-center rounded-full bg-primary/15 text-xs font-bold text-primary">1</span>
-            볼륨
-          </TabsTrigger>
-          <TabsTrigger value={1} className="flex-1 flex items-center justify-center gap-1.5">
-            <span className="inline-flex size-5 items-center justify-center rounded-full bg-primary/15 text-xs font-bold text-primary">2</span>
-            볼륨
-          </TabsTrigger>
-          <TabsTrigger value={2} className="flex-1 flex items-center justify-center gap-1.5">
-            <span className="inline-flex size-5 items-center justify-center rounded-full bg-primary/15 text-xs font-bold text-primary">3</span>
-            볼륨
-          </TabsTrigger>
-        </TabsList>
-        <TabsContent value={0}>
-          <ReverseMode />
-        </TabsContent>
-        <TabsContent value={1}>
-          <RouletteMode />
-        </TabsContent>
-        <TabsContent value={2}>
-          <RunawayMode />
-        </TabsContent>
-      </Tabs>
+        {/* Controls */}
+        <div className="flex items-center justify-between mb-4">
+          <PlayButton isPlaying={isPlaying} onToggle={handleTogglePlay} />
+          <VolumeDisplay sliderValue={sliderValue} actualVolume={actualVolume} />
+        </div>
+
+        {/* Active Mode Slider */}
+        {activeTab === 0 && <ReverseMode />}
+        {activeTab === 1 && <RouletteMode />}
+        {activeTab === 2 && <RunawayMode />}
+      </div>
     </div>
   );
 }
