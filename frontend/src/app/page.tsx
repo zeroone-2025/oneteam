@@ -42,37 +42,44 @@ export default function Home() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-lg">
-      <div className="flex flex-col items-center gap-6">
+    <div className="container mx-auto px-4 py-6 max-w-2xl">
+      {/* YouTube Player */}
+      <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-black mb-6">
+        <div id="yt-player" className="absolute inset-0 w-full h-full" />
+      </div>
+
+      {/* Controls */}
+      <div className="flex items-center justify-between mb-6">
         <PlayButton isPlaying={isPlaying} onToggle={handleTogglePlay} />
         <VolumeDisplay sliderValue={sliderValue} actualVolume={actualVolume} />
-
-        <Tabs defaultValue={0} onValueChange={handleTabChange} className="w-full">
-          <TabsList className="w-full grid grid-cols-3 gap-0">
-            <TabsTrigger value={0} className="flex items-center gap-1.5">
-              <span className="inline-flex size-5 items-center justify-center rounded-full bg-primary/15 text-xs font-bold text-primary">1</span>
-              볼륨
-            </TabsTrigger>
-            <TabsTrigger value={1} className="flex items-center gap-1.5">
-              <span className="inline-flex size-5 items-center justify-center rounded-full bg-primary/15 text-xs font-bold text-primary">2</span>
-              볼륨
-            </TabsTrigger>
-            <TabsTrigger value={2} className="flex items-center gap-1.5">
-              <span className="inline-flex size-5 items-center justify-center rounded-full bg-primary/15 text-xs font-bold text-primary">3</span>
-              볼륨
-            </TabsTrigger>
-          </TabsList>
-          <TabsContent value={0}>
-            <ReverseMode />
-          </TabsContent>
-          <TabsContent value={1}>
-            <RouletteMode />
-          </TabsContent>
-          <TabsContent value={2}>
-            <RunawayMode />
-          </TabsContent>
-        </Tabs>
       </div>
+
+      {/* Mode Tabs */}
+      <Tabs defaultValue={0} onValueChange={handleTabChange} className="w-full">
+        <TabsList className="w-full mb-4">
+          <TabsTrigger value={0} className="flex-1 flex items-center justify-center gap-1.5">
+            <span className="inline-flex size-5 items-center justify-center rounded-full bg-primary/15 text-xs font-bold text-primary">1</span>
+            볼륨
+          </TabsTrigger>
+          <TabsTrigger value={1} className="flex-1 flex items-center justify-center gap-1.5">
+            <span className="inline-flex size-5 items-center justify-center rounded-full bg-primary/15 text-xs font-bold text-primary">2</span>
+            볼륨
+          </TabsTrigger>
+          <TabsTrigger value={2} className="flex-1 flex items-center justify-center gap-1.5">
+            <span className="inline-flex size-5 items-center justify-center rounded-full bg-primary/15 text-xs font-bold text-primary">3</span>
+            볼륨
+          </TabsTrigger>
+        </TabsList>
+        <TabsContent value={0}>
+          <ReverseMode />
+        </TabsContent>
+        <TabsContent value={1}>
+          <RouletteMode />
+        </TabsContent>
+        <TabsContent value={2}>
+          <RunawayMode />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
