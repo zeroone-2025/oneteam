@@ -77,9 +77,8 @@ export default function Home() {
         </div>
 
         {/* Controls */}
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center mb-4">
           <PlayButton isPlaying={isPlaying} onToggle={handleTogglePlay} />
-          <VolumeDisplay sliderValue={sliderValue} actualVolume={actualVolume} />
         </div>
 
         {/* Active Mode Slider */}
