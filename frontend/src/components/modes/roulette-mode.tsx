@@ -19,6 +19,7 @@ export function RouletteMode() {
 
   return (
     <div className="py-6 space-y-4">
+      {/* Normal-looking slider */}
       <div className="px-2" onPointerUp={handlePointerUp}>
         <Slider
           value={[sliderValue]}
@@ -32,7 +33,9 @@ export function RouletteMode() {
         <span>50</span>
         <span>100</span>
       </div>
-      <RouletteSpinner />
+
+      {/* Roulette pops up after interaction */}
+      {rouletteState !== "idle" && <RouletteSpinner />}
     </div>
   );
 }

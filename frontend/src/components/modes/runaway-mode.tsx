@@ -3,6 +3,7 @@
 import { useRef, useState, useEffect, useCallback } from "react";
 import { Slider } from "@/components/ui/slider";
 import { useVolumeStore } from "@/stores/use-volume-store";
+import { CenterToast } from "@/components/center-toast";
 
 const BAR_WIDTH = 300;
 const BAR_HEIGHT = 48;
@@ -11,6 +12,7 @@ const DETECT_RANGE = 180;
 export function RunawayMode() {
   const { sliderValue, setSliderValue, setActualVolume } = useVolumeStore();
   const [caught, setCaught] = useState(false);
+  const [toastMsg, setToastMsg] = useState<string | null>(null);
   const isMoving = useRef(false);
 
   // absolute pixel position on viewport
@@ -67,6 +69,7 @@ export function RunawayMode() {
   const handlePointerDown = useCallback(() => {
     if (!caught) {
       setCaught(true);
+      setToastMsg("축하드려요! 잡혔네요 ㅠ");
     }
   }, [caught]);
 
@@ -81,6 +84,8 @@ export function RunawayMode() {
   // caught: render inline normally
   if (caught) {
     return (
+      <>
+      <CenterToast message={toastMsg} onDone={() => setToastMsg(null)} />
       <div className="py-6 space-y-4">
         <div className="px-2">
           <Slider
@@ -96,6 +101,7 @@ export function RunawayMode() {
           <span>100</span>
         </div>
       </div>
+      </>
     );
   }
 
