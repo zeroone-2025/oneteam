@@ -17,8 +17,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "제로톤 프로젝트",
-  description: "Zero에서 One을 만드는 2시간의 경험",
+  title: "소리볼륨 조절기",
+  description: "볼륨을 마음대로 조절할 수 없는 이상한 볼륨 조절기",
 };
 
 export default function RootLayout({
